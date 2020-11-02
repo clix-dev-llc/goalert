@@ -3,8 +3,8 @@
     "Name": "Build-BE",
     "Command": ["make", "-s", "bin/goalert"],
     "Restart": true,
-    "Quiet": false,
-    "IgnoreErrors": false
+    "Quiet": true,
+    "IgnoreErrors": true
   },
   {
     "Name": "Backend",
@@ -19,7 +19,7 @@
       "--log-errors-only"
     ],
     "Restart": true,
-    "IgnoreErrors": false,
+    "IgnoreErrors": true,
     "Watch": true,
     "Before": {
       "Name": "PG Wait",
@@ -70,12 +70,12 @@
     "Before": {
       "Name": "PG Cleanup",
       "Command": ["docker", "rm", "-f", "smoketest-postgres"],
-      "IgnoreErrors": false
+      "IgnoreErrors": true
     },
     "After": {
       "Name": "PG Cleanup",
       "Command": ["docker", "rm", "-f", "smoketest-postgres"],
-      "IgnoreErrors": false
+      "IgnoreErrors": true
     },
     "Command": [
       "docker",
