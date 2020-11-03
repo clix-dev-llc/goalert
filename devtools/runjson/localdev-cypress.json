@@ -4,7 +4,7 @@
     "Command": ["make", "-s", "bin/goalert"],
     "Restart": true,
     "Quiet": true,
-    "IgnoreErrors": false
+    "IgnoreErrors": true
   },
   {
     "Name": "Backend",
@@ -19,7 +19,7 @@
       "--log-errors-only"
     ],
     "Restart": true,
-    "IgnoreErrors": false,
+    "IgnoreErrors": true,
     "Watch": true,
     "Before": {
       "Name": "PG Wait",
