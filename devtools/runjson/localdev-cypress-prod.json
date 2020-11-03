@@ -85,7 +85,8 @@
       "--config",
       "baseUrl=http://localhost:3040$GOALERT_HTTP_PREFIX",
       "--browser",
-      "$CY_BROWSER"
+      "$CY_BROWSER",
+      "--headless"
     ],
     "Env": [
       "CYPRESS_DB_URL=postgres://postgres@localhost:5433/postgres?sslmode=disable"
