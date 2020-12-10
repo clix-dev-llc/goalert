@@ -2,41 +2,91 @@ package graphqlapp
 
 import "html/template"
 
-const playVersion = "1.7.23"
-
 const playHTML = `
+<!--
+ *  Copyright (c) 2020 GraphQL Contributors
+ *  All rights reserved.
+ *
+ *  This source code is licensed under the MIT License 
+ *  https://github.com/graphql/graphiql/blob/main/LICENSE
+-->
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset=utf-8/>
-	<meta name="viewport" content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
-	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/graphql-playground-react@{{ .Version }}/build/static/css/index.css"/>
-	<link rel="shortcut icon" href="//cdn.jsdelivr.net/npm/graphql-playground-react@{{ .Version }}/build/favicon.png"/>
-	<script src="//cdn.jsdelivr.net/npm/graphql-playground-react@{{ .Version }}/build/static/js/middleware.js"></script>
-	<title>GoAlert - GraphQL API</title>
-	<style type="text/css">
-		html { font-family: "Open Sans", sans-serif; overflow: hidden; }
-		body { margin: 0; background: #172a3a; }
-		.CodeMirror-cursor { background-color: white !important; width: 1px !important; }
-	</style>
-</head>
-<body>
+  <head>
+    <style>
+      body {
+        height: 100%;
+        margin: 0;
+        width: 100%;
+        overflow: hidden;
+      }
 
-<div id="root"/>
-<script type="text/javascript">
-	window.addEventListener('load', function (event) {
-		var root = document.getElementById('root');
-		var path = location.host + location.pathname.replace(/\/explore.*$/, '');
+      #graphiql {
+        height: 100vh;
+      }
+    </style>
 
-		GraphQLPlayground.init(root, {
-			endpoint: location.protocol + '//' + path,
-			settings: {
-				'request.credentials': 'same-origin'
-			}
-		})
-	})
-</script>
-</body>
+    <!--
+      This GraphiQL example depends on Promise and fetch, which are available in
+      modern browsers, but can be "polyfilled" for older browsers.
+      GraphiQL itself depends on React DOM.
+      If you do not want to rely on a CDN, you can host these files locally or
+      include them directly in your favored resource bunder.
+    -->
+    <script
+      crossorigin
+      src="https://unpkg.com/react@16/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+    ></script>
+
+    <!--
+      These two files can be found in the npm module, however you may wish to
+      copy them directly into your environment, or perhaps include them in your
+      favored resource bundler.
+     -->
+    <link rel="stylesheet" href="https://unpkg.com/graphiql/graphiql.min.css" />
+  </head>
+
+  <body>
+    <div id="graphiql">Loading...</div>
+    <script
+      src="https://unpkg.com/graphiql/graphiql.min.js"
+      type="application/javascript"
+    ></script>
+    <script>
+      function graphQLFetcher(graphQLParams) {
+				var path = location.host + location.pathname.replace(/\/explore.*$/, '');
+
+        return fetch(
+          location.protocol + '//' + path,
+          {
+            method: 'post',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(graphQLParams),
+            credentials: 'same-origin',
+          },
+        ).then(function (response) {
+          return response.json().catch(function () {
+            return response.text();
+          });
+        });
+      }
+
+      ReactDOM.render(
+        React.createElement(GraphiQL, {
+          fetcher: graphQLFetcher,
+          defaultVariableEditorOpen: true,
+        }),
+        document.getElementById('graphiql'),
+      );
+    </script>
+  </body>
 </html>
 `
 
